@@ -39,10 +39,26 @@ def generate_launch_description():
         parameters=[exomy_config],
         output='screen'
     )
+    image_tools = Node(
+        package='image_tools',
+        executable='cam2image',
+        name='cam2image',
+        namespace=namespace_,
+        output='screen'
+    )
+    web_video_server = Node(
+        package='web_video_server',
+        executable='web_video_server',
+        name='web_video_server',
+        output='screen',
+    )
 
     return LaunchDescription([
         robot,
         gamepad,
         joy,
-        motors
+        motors,
+        image_tools,
+        web_video_server,
+    
     ])

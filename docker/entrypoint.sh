@@ -13,11 +13,8 @@ then
 	colcon build
 	source "/root/exomy_ws/install/setup.bash"
 	
-	cd "/root/exomy_ws/src/exomy/gui"
-
-	# node node_modules/ros2-web-bridge/bin/rosbridge.js &
-	# http-server -p 8000 &
-
+	# start a rosbridge server in the background
+	ros2 run rosbridge_server rosbridge_websocket_launch.xml &
 	ros2 launch exomy exomy.launch.py
 	# Sleep is needed to first print output and then start bash
 	sleep 1

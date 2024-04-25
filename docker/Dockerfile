@@ -6,7 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Basic tools
 RUN apt-get update && \
-    apt-get install vim nano git tmux wget curl python3-pip net-tools iputils-ping zsh fonts-powerline -y
+    apt-get install vim nano git tmux wget curl python3-pip net-tools iputils-ping zsh fonts-powerline unzip -y
 
 # OH-MY-ZSH Installation
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &&\
@@ -15,18 +15,13 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh
 
 # Install additional ros packages
 RUN sudo apt-get update && \
-    sudo apt-get install ros-foxy-joy -y
+    sudo apt-get install ros-foxy-joy -y && \
+    sudo apt-get install ros-foxy-async-web-server-cpp ros-foxy-cv-bridge ros-foxy-image-transport -y && \
+    sudo apt install ros-foxy-rosbridge-server -y && \
+    sudo apt-get install ros-foxy-image-tools -y
+
+
 RUN pip3 install adafruit-pca9685
-
-
-# Install packages for web application
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
-RUN sudo apt-get update && \
-    sudo apt-get install nodejs -y
-
-ENV NPM_CONFIG_PREFIX=/home/exomy/.npm-global
-ENV PATH=$PATH:/home/exomy/.npm-global/bin
-RUN npm install http-server -g
 
 # Create Ros workspace
 ENV EXOMY_WS=/home/exomy/exomy_ws
@@ -35,6 +30,8 @@ WORKDIR /root
 
 
 RUN echo ". /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+RUN git clone --branch ros2 https://github.com/RobotWebTools/web_video_server /root/exomy_ws/src/web_video_server
+RUN unzip -o /root/temp.zip -d /root/
 
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
