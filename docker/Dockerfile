@@ -1,5 +1,5 @@
 # Base image
-FROM ros:foxy
+FROM ros:humble
 
 ENV TZ=Europe/Amsterdam
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -11,14 +11,14 @@ RUN apt-get update && \
 # OH-MY-ZSH Installation
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &&\
     sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/' ~/.zshrc &&\
-    echo "source /opt/ros/foxy/setup.zsh" >> ~/.zshrc 
+    echo "source /opt/ros/humble/setup.zsh" >> ~/.zshrc 
 
 # Install additional ros packages
 RUN sudo apt-get update && \
-    sudo apt-get install ros-foxy-joy -y && \
-    sudo apt-get install ros-foxy-async-web-server-cpp ros-foxy-cv-bridge ros-foxy-image-transport -y && \
-    sudo apt install ros-foxy-rosbridge-server -y && \
-    sudo apt-get install ros-foxy-image-tools -y
+    sudo apt-get install ros-humble-joy -y && \
+    sudo apt-get install ros-humble-async-web-server-cpp ros-humble-cv-bridge ros-humble-image-transport -y && \
+    sudo apt install ros-humble-rosbridge-server -y && \
+    sudo apt-get install ros-humble-image-tools -y
 
 
 RUN pip3 install adafruit-pca9685
