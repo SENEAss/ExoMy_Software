@@ -77,6 +77,10 @@ class GamepadParserNode(Node):
                     = {}".format(self.motors_enabled))
                 self.motors_enabled = False
 
+        # force stop motors
+        if (data.buttons[8] == 1):
+            self.locomotion_mode = LocomotionMode.FORCE_STOP.value
+
         rover_cmd.motors_enabled = self.motors_enabled
 
         # The velocity is decoded as value between 0...100

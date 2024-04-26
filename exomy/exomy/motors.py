@@ -120,3 +120,15 @@ class Motors():
 
         for wheel_name, motor_pin in self.pins['drive'].items():
             self.pwm.set_pwm(motor_pin, 0, duty_cycle)
+
+    # def forceStop(self, driving_command):
+    #     # Stop the motors gradually by reducing the duty cycle until it reaches self.driving_pwm_neutral
+    #     for wheel_name, motor_pin in self.pins['drive'].items():
+    #         duty_cycle = int(self.driving_pwm_neutral +
+    #                          driving_command[wheel_name]/100.0 * self.driving_pwm_range * self.wheel_directions[wheel_name])
+
+    #         # Gradually reduce the duty cycle
+    #         while duty_cycle > self.driving_pwm_neutral:
+    #             duty_cycle -= 1
+    #             self.pwm.set_pwm(motor_pin, 0, duty_cycle)
+    #             time.sleep(0.01)

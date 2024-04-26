@@ -13,7 +13,7 @@ class Rover():
     FL, FR, CL, CR, RL, RR = range(0, 6)
 
     # Defining locomotion modes
-    FAKE_ACKERMANN, ACKERMANN, POINT_TURN, CRABBING = range(0, 4)
+    FAKE_ACKERMANN, ACKERMANN, POINT_TURN, CRABBING , FORCE_STOP = range(0, 5)
 
     def __init__(self):
         self.locomotion_mode = LocomotionMode.FAKE_ACKERMANN
@@ -165,7 +165,6 @@ class Rover():
                 steering_angles[self.CR] = wheel_direction
                 steering_angles[self.RL] = wheel_direction
                 steering_angles[self.RR] = wheel_direction
-
         return steering_angles
 
     def joystickToVelocity(self, driving_command, steering_command):
@@ -177,6 +176,10 @@ class Rover():
         '''
 
         motor_speeds = [0]*6
+
+        #if (self.locomotion_mode == LocomotionMode.FORCE_STOP.value):
+            # linearly decrease speed to 0
+
         if (self.locomotion_mode == LocomotionMode.FAKE_ACKERMANN.value):
             if(driving_command > 0 and steering_command >= 0):
                 motor_speeds[self.FL] = 50
