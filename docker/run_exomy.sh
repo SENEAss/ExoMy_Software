@@ -66,7 +66,6 @@ docker run \
     -it \
     -v ~/ExoMy_Software/exomy:/root/exomy_ws/src/exomy \
     -v ~/ExoMy_Software/exomy_msgs:/root/exomy_ws/src/exomy_msgs \
-    -v ~/ExoMy_Software/temp.zip:/root/temp.zip \
     -p 8000:8000 \
     -p 8080:8080 \
     -p 9090:9090 \

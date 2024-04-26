@@ -31,7 +31,8 @@ WORKDIR /root
 
 RUN echo ". /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 RUN git clone --branch ros2 https://github.com/RobotWebTools/web_video_server /root/exomy_ws/src/web_video_server
-RUN unzip -o /root/temp.zip -d /root/
+ADD temp.zip /root/temp.zip
+RUN unzip /root/temp.zip -d /root/
 
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
