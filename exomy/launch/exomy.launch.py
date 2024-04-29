@@ -39,18 +39,26 @@ def generate_launch_description():
         parameters=[exomy_config],
         output='screen'
     )
+
+    rosbridge_websocket = Node(
+        package='rosbridge_server',
+        executable='rosbridge_websocket',
+        name='rosbridge_websocket',
+        output='screen'
+    )
+
     image_tools = Node(
         package='image_tools',
         executable='cam2image',
         name='cam2image',
-        namespace=namespace_,
-        output='screen'
+        remappings=[('/image', '/pi_cam/image_raw')]
     )
+
     web_video_server = Node(
         package='web_video_server',
         executable='web_video_server',
         name='web_video_server',
-        output='screen',
+        output='screen'
     )
 
     return LaunchDescription([
@@ -58,7 +66,7 @@ def generate_launch_description():
         gamepad,
         joy,
         motors,
+        rosbridge_websocket,
         image_tools,
         web_video_server,
-    
     ])
