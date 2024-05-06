@@ -27,13 +27,24 @@ class RobotNode(Node):
     def joy_callback(self, msg):
         cmds = MotorCommands()
 
-        self.robot.setLocomotionMode(msg.locomotion_mode)
-        cmds.motor_angles = self.robot.joystickToSteeringAngle(
+        if msg.force_stop:
+            # Decrease vel linearly until 0
+            vel = msg.vel
+            while vel > 0:
+                cmds.motor_angles = self.robot.joystickToSteeringAngle(vel, msg.steering)
+                cmds.motor_speeds = self.robot.joystickToVelocity(vel, msg.steering)
+                self.robot_pub.publish(cmds)
+                vel -= 0.1  # Adjust the decrement value as needed
+            cmds.motor_speeds = [0, 0, 0, 0, 0, 0]
+            self.robot_pub.publish(cmds)
+        else:
+            self.robot.setLocomotionMode(msg.locomotion_mode)
+            cmds.motor_angles = self.robot.joystickToSteeringAngle(
             msg.vel, msg.steering)
-        cmds.motor_speeds = self.robot.joystickToVelocity(
+            cmds.motor_speeds = self.robot.joystickToVelocity(
             msg.vel, msg.steering)
 
-        self.robot_pub.publish(cmds)
+            self.robot_pub.publish(cmds)
 
 
 def main(args=None):

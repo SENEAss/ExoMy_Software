@@ -26,6 +26,7 @@ class GamepadParserNode(Node):
 
         self.locomotion_mode = LocomotionMode.ACKERMANN.value
         self.motors_enabled = True
+        self.force_stop = False
 
         self.get_logger().info('\t{} STARTED.'.format(self.node_name.upper()))
 
@@ -55,7 +56,17 @@ class GamepadParserNode(Node):
             self.locomotion_mode = LocomotionMode.ACKERMANN.value
         # B Button
         if (data.buttons[2] == 1):
-            pass
+            if self.force_stop is True:
+                self.force_stop = False
+                self.get_logger().info("Force stop disabled!")
+            elif self.force_stop is False:
+                self.force_stop = True
+                self.get_logger().info("Force stop enabled!")
+            else:
+                self.get_logger().error(
+                    "Exceptional value for [force_stop] \
+                    = {}".format(self.force_stop))
+                self.force_stop = False
         # Y Button
         if (data.buttons[3] == 1):
             self.locomotion_mode = LocomotionMode.CRABBING.value
@@ -77,9 +88,6 @@ class GamepadParserNode(Node):
                     = {}".format(self.motors_enabled))
                 self.motors_enabled = False
 
-        # force stop motors
-        if (data.buttons[8] == 1):
-            self.locomotion_mode = LocomotionMode.FORCE_STOP.value
 
         rover_cmd.motors_enabled = self.motors_enabled
 
@@ -95,6 +103,8 @@ class GamepadParserNode(Node):
         rover_cmd.steering = int(math.atan2(y, x)*180.0/math.pi)
 
         rover_cmd.connected = True
+
+        rover_cmd.force_stop = self.force_stop
 
         self.pub.publish(rover_cmd)
 
