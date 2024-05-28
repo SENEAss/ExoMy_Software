@@ -1,33 +1,33 @@
-import Adafruit_PCA9685
+import board
+import busio
+from adafruit_pca9685 import PCA9685
 import yaml
 import time
 import os
 
-config_filename = '../config/exomy.yaml'
-
+config_filename = '../config/exomy.yaml.template'
 
 def get_driving_pins():
     pin_list = []
     with open(config_filename, 'r') as file:
-        param_dict = yaml.load(file, yaml.FullLoader)
+        param_dict = yaml.safe_load(file)
 
     for key, value in param_dict.items():
-        if('pin_drive_' in str(key)):
+        if 'pin_drive_' in key:
             pin_list.append(value)
     return pin_list
 
 def get_drive_pwm_neutral():
-     
     with open(config_filename, 'r') as file:
-        param_dict = yaml.load(file, yaml.FullLoader)
+        param_dict = yaml.safe_load(file)
 
     for key, value in param_dict.items():
-        if('drive_pwm_neutral' in str(key)):
-            return value                    
+        if 'drive_pwm_neutral' in key:
+            return value
 
     default_value = 300
-    print('The parameter drive_pwm_neutral could not be found in the exomy.yaml \n')
-    print('It was set to the default value: '+ default_value + '\n')
+    print('The parameter drive_pwm_neutral could not be found in the exomy.yaml')
+    print('It was set to the default value:', default_value)
     return default_value
 
 if __name__ == "__main__":
@@ -58,39 +58,18 @@ On each motor you have to turn the correction screw until the motor really stand
         print("exomy.yaml does not exist. Finish config_motor_pins.py to generate it.")
         exit()
 
-
-    pwm = Adafruit_PCA9685.PCA9685()
-
-    '''
-    The drive_pwm_neutral value is determined from the exomy.yaml file.
-    But it can be also calculated from the values of the PWM board and motors, 
-    like shown in the following calculation:
-
-    # For most motors a pwm frequency of 50Hz is normal
+    i2c = busio.I2C(board.SCL, board.SDA)
+    pca = PCA9685(i2c)
     pwm_frequency = 50.0  # Hz
-    pwm.set_pwm_freq(pwm_frequency)
-
-    # The cycle is the inverted frequency converted to milliseconds
-    cycle = 1.0/pwm_frequency * 1000.0  # 20 ms
-
-    # The time the pwm signal is set to on during the duty cycle
-    on_time = 1.5  # ms
-
-    # Duty cycle is the percentage of a cycle the signal is on
-    duty_cycle = on_time/cycle # 0.075
-
-    # The PCA 9685 board requests a 12 bit number for the duty_cycle
-    value = int(duty_cycle*4096.0) # 307
-    '''
+    pca.frequency = pwm_frequency
 
     value = get_drive_pwm_neutral()
     pin_list = get_driving_pins()
 
     for pin in pin_list:
-        pwm.set_pwm(pin, 0, value)
-        time.sleep(0.1)
+        pca.channels[pin].duty_cycle = int(value * 65535 / 4096)
 
     input('Press any button if you are done to complete configuration\n')
 
     for pin in pin_list:
-        pwm.set_pwm(pin, 0, 0)
+        pca.channels[pin].duty_cycle = 0

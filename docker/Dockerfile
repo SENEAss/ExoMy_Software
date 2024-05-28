@@ -20,8 +20,9 @@ RUN sudo apt-get update && \
     sudo apt install ros-humble-rosbridge-server -y && \
     sudo apt-get install ros-humble-image-tools -y
 
-
-RUN pip3 install adafruit-pca9685
+# Install adafruit libs
+RUN sudo apt-get install python3-dev python3-rpi.gpio
+RUN pip3 install adafruit-circuitpython-pca9685
 
 # Create Ros workspace
 ENV EXOMY_WS=/home/exomy/exomy_ws
