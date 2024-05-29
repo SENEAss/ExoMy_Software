@@ -40,34 +40,34 @@ class MotorNode(Node):
         """Initialize Parameters."""
 
         # Pin numbers for motors on PWM board
-        self.declare_parameter('pin_drive_fl', 14)
+        self.declare_parameter('pin_drive_fl', 0)
         self.parameters['pin_drive_fl'] = self.get_parameter('pin_drive_fl').value
-        self.declare_parameter('pin_steer_fl', 12)
+        self.declare_parameter('pin_steer_fl', 1)
         self.parameters['pin_steer_fl'] = self.get_parameter('pin_steer_fl').value
         
-        self.declare_parameter('pin_drive_fr', 2)
+        self.declare_parameter('pin_drive_fr', 4)
         self.parameters['pin_drive_fr'] = self.get_parameter('pin_drive_fr').value
-        self.declare_parameter('pin_steer_fr', 0)
+        self.declare_parameter('pin_steer_fr', 5)
         self.parameters['pin_steer_fr'] = self.get_parameter('pin_steer_fr').value
 
-        self.declare_parameter('pin_drive_cl', 6)
+        self.declare_parameter('pin_drive_cl', 3)
         self.parameters['pin_drive_cl'] = self.get_parameter('pin_drive_cl').value
-        self.declare_parameter('pin_steer_cl', 7)
+        self.declare_parameter('pin_steer_cl', 2)
         self.parameters['pin_steer_cl'] = self.get_parameter('pin_steer_cl').value
 
-        self.declare_parameter('pin_drive_cr', 4)
+        self.declare_parameter('pin_drive_cr', 7)
         self.parameters['pin_drive_cr'] = self.get_parameter('pin_drive_cr').value
-        self.declare_parameter('pin_steer_cr', 5)
+        self.declare_parameter('pin_steer_cr', 6)
         self.parameters['pin_steer_cr'] = self.get_parameter('pin_steer_cr').value
 
-        self.declare_parameter('pin_drive_rl', 15)
+        self.declare_parameter('pin_drive_rl', 11)
         self.parameters['pin_drive_rl'] = self.get_parameter('pin_drive_rl').value
-        self.declare_parameter('pin_steer_rl', 13)
+        self.declare_parameter('pin_steer_rl', 10)
         self.parameters['pin_steer_rl'] = self.get_parameter('pin_steer_rl').value
 
-        self.declare_parameter('pin_drive_rr', 3)
+        self.declare_parameter('pin_drive_rr', 8)
         self.parameters['pin_drive_rr'] = self.get_parameter('pin_drive_rr').value
-        self.declare_parameter('pin_steer_rr', 1)
+        self.declare_parameter('pin_steer_rr', 9)
         self.parameters['pin_steer_rr'] = self.get_parameter('pin_steer_rr').value
 
         ## PWM values
