@@ -31,6 +31,9 @@ WORKDIR /root
 
 
 RUN echo ". /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+## if you made changes to the code you need to comment the prebuilt temp.zip and uncomment the webserver clone to rebuild the image
+## attention: this will take a long time to build or may crash the build if your're not using a powerful machine
+# git clone --branch ros2 https://github.com/RobotWebTools/web_video_server 
 ADD temp.zip /root/temp.zip
 RUN unzip -o /root/temp.zip -d /root/
 
