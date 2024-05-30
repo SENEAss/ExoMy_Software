@@ -5,7 +5,7 @@ import yaml
 import time
 import os
 
-config_filename = '../config/exomy.yaml.template'
+config_filename = '../config/exomy.yaml'
 
 def get_driving_pins():
     pin_list = []

@@ -6,7 +6,7 @@ import busio
 import yaml
 from adafruit_pca9685 import PCA9685
 
-config_filename = '../config/exomy.yaml.template'
+config_filename = '../config/exomy.yaml'
 
 def get_steering_motor_pins():
     steering_motor_pins = {}
