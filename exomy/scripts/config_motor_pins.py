@@ -2,7 +2,9 @@ import time
 import os
 import board
 import busio
+from adafruit_motor import servo
 from adafruit_pca9685 import PCA9685
+from shutil import copyfile
 
 DRIVE_MOTOR, STEER_MOTOR = [0, 1]
 
@@ -25,47 +27,28 @@ pca = PCA9685(i2c)
 # Set the PWM frequency to 50Hz
 pca.frequency = 50
 
-# The cycle is the inverted frequency converted to milliseconds
-cycle = 1.0 / 50.0 * 1000.0  # ms
-
-# The time the pwm signal is set to on during the duty cycle
-on_time_1 = 2.4  # ms
-on_time_2 = 1.5  # ms
-
-# Duty cycle is the percentage of a cycle the signal is on
-duty_cycle_1 = on_time_1 / cycle
-duty_cycle_2 = on_time_2 / cycle
-
-# The PCA 9685 board requests a 16-bit number for the duty_cycle
-value_1 = 200
-value_2 = 400
+# Configure the pulse range for your servo (adjust min_pulse and max_pulse as needed)
+min_pulse = 500
+max_pulse = 2400
 
 class Motor():
     def __init__(self, pin):
-
         self.pin_name = 'pin_'
         self.pin_number = pin
+        self.servo = servo.Servo(pca.channels[pin], min_pulse=min_pulse, max_pulse=max_pulse)
 
     def wiggle_motor(self):
-
-        # Set the motor to the second value
-        pca.channels[self.pin_number].duty_cycle = value_2
-        # Wait for 1 seconds
+        # Set the motor to two different positions
+        self.servo.angle = 0
         time.sleep(1.0)
-        # Set the motor to the first value
-        pca.channels[self.pin_number].duty_cycle = value_1
-        # Wait for 1 seconds
+        self.servo.angle = 180
         time.sleep(1.0)
-        # Set the motor to neutral
-        pca.channels[self.pin_number].duty_cycle = 307
-        # Wait for half seconds
+        self.servo.angle = 90
         time.sleep(0.5)
-        # Stop the motor
-        pca.channels[self.pin_number].duty_cycle = 0
+        self.servo.angle = None  # Stop the motor
 
     def stop_motor(self):
-        # Turn the motor off
-        pca.channels[self.pin_number].duty_cycle = 0
+        self.servo.angle = None  # Turn the motor off
 
 def print_exomy_layout():
     print(
@@ -91,7 +74,6 @@ def update_config_file():
             for key, value in pin_dict.items():
                 if key in line:
                     line = line.replace(line.split(': ', 1)[1], str(value) + '\n')
-
                     break
             output += line
 
@@ -173,7 +155,7 @@ All other controls will be explained in the process.
                 else:
                     try:
                         pos = int(pos_selection)
-                        if pos >= 1 and pos <= 6:
+                        if 1 <= pos <= 6:
                             motor.pin_name += pos_names[pos]
                             break
                         else:
@@ -214,6 +196,7 @@ All other controls will be explained in the process.
     $$ |      $$ |$$ |  $$ |$$ |$$$$$$$  |$$ |  $$ |\$$$$$$$\ \$$$$$$$ |
     \__|      \__|\__|  \__|\__|\_______/ \__|  \__| \_______| \_______|
                                                                         
-    ''')
+    '''
+    )
 
-
+pca.deinit()
