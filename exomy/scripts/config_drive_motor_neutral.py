@@ -12,8 +12,12 @@ def get_driving_pins():
     with open(config_filename, 'r') as file:
         param_dict = yaml.safe_load(file)
 
-    for key, value in param_dict.items():
+    exomy = param_dict['exomy']
+    ros__parameters = exomy['ros__parameters']
+
+    for key, value in ros__parameters.items():
         if 'pin_drive_' in key:
+            print(key, value)
             pin_list.append(value)
     return pin_list
 
@@ -21,7 +25,10 @@ def get_drive_pwm_neutral():
     with open(config_filename, 'r') as file:
         param_dict = yaml.safe_load(file)
 
-    for key, value in param_dict.items():
+    exomy = param_dict['exomy']
+    ros__parameters = exomy['ros__parameters']
+    
+    for key, value in ros__parameters.items():
         if 'drive_pwm_neutral' in key:
             return value
 

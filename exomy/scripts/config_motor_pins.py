@@ -2,9 +2,7 @@ import time
 import os
 import board
 import busio
-from adafruit_motor import servo
 from adafruit_pca9685 import PCA9685
-from shutil import copyfile
 
 DRIVE_MOTOR, STEER_MOTOR = [0, 1]
 
@@ -27,28 +25,46 @@ pca = PCA9685(i2c)
 # Set the PWM frequency to 50Hz
 pca.frequency = 50
 
-# Configure the pulse range for your servo (adjust min_pulse and max_pulse as needed)
-min_pulse = 500
-max_pulse = 2400
+# The cycle is the inverted frequency converted to milliseconds
+cycle = 1.0 / 50.0 * 1000.0  # ms
 
-class Motor():
+# The time the pwm signal is set to on during the duty cycle
+on_time_1 = 2.4  # ms
+on_time_2 = 1.5  # ms
+
+# Duty cycle is the percentage of a cycle the signal is on
+duty_cycle_1 = on_time_1 / cycle
+duty_cycle_2 = on_time_2 / cycle
+
+# Convert duty cycle to 16-bit values
+value_1 = int(duty_cycle_1 * 65535)
+value_2 = int(duty_cycle_2 * 65535)
+neutral_value = int((1.5 / cycle) * 65535)  # Neutral position
+
+class Motor:
     def __init__(self, pin):
         self.pin_name = 'pin_'
         self.pin_number = pin
-        self.servo = servo.Servo(pca.channels[pin], min_pulse=min_pulse, max_pulse=max_pulse)
 
     def wiggle_motor(self):
-        # Set the motor to two different positions
-        self.servo.angle = 0
+        # Set the motor to the second value
+        pca.channels[self.pin_number].duty_cycle = value_2
+        # Wait for 1 second
         time.sleep(1.0)
-        self.servo.angle = 180
+        # Set the motor to the first value
+        pca.channels[self.pin_number].duty_cycle = value_1
+        # Wait for 1 second
         time.sleep(1.0)
-        self.servo.angle = 90
+        # Set the motor to neutral
+        pca.channels[self.pin_number].duty_cycle = neutral_value
+        # Wait for half a second
         time.sleep(0.5)
-        self.servo.angle = None  # Stop the motor
+        # Stop the motor
+        pca.channels[self.pin_number].duty_cycle = 0
 
     def stop_motor(self):
-        self.servo.angle = None  # Turn the motor off
+        # Turn the motor off
+        pca.channels[self.pin_number].duty_cycle = 0
 
 def print_exomy_layout():
     print(
@@ -101,7 +117,7 @@ $$$$$$$$\ $$  /\$$\ \$$$$$$  |$$ | \_/ $$ |\$$$$$$$ |
 ###############
 Motor Configuration
 
-This scripts leads you through the configuration of the motors.
+This script leads you through the configuration of the motors.
 First we have to find out, to which pin of the PWM board a motor is connected.
 Look closely which motor moves and type in the answer.
 
@@ -155,7 +171,7 @@ All other controls will be explained in the process.
                 else:
                     try:
                         pos = int(pos_selection)
-                        if 1 <= pos <= 6:
+                        if pos >= 1 and pos <= 6:
                             motor.pin_name += pos_names[pos]
                             break
                         else:
@@ -196,7 +212,4 @@ All other controls will be explained in the process.
     $$ |      $$ |$$ |  $$ |$$ |$$$$$$$  |$$ |  $$ |\$$$$$$$\ \$$$$$$$ |
     \__|      \__|\__|  \__|\__|\_______/ \__|  \__| \_______| \_______|
                                                                         
-    '''
-    )
-
-pca.deinit()
+    ''')

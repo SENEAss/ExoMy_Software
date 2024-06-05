@@ -1,3 +1,4 @@
+# exomy_msgs/msg/RoverCommand.msg
 bool connected
 bool motors_enabled
 int64 locomotion_mode
