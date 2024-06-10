@@ -61,6 +61,29 @@ def generate_launch_description():
         output='screen'
     )
 
+    battery_publisher = Node(
+        package='exomy',
+        executable='battery_publisher',
+        name='battery_publisher',
+        output='screen'
+    )
+
+    cpu_temperature_node = Node(
+        package='exomy',
+        executable='cpu_temperature_node',
+        namespace=namespace_,
+        name='cpu_temperature_node',
+        output='screen'
+    )
+
+    storage_capacity_node = Node(
+        package='exomy',
+        executable='storage_capacity_node',
+        namespace=namespace_,
+        name='storage_capacity_node',
+        output='screen'
+    )
+
     return LaunchDescription([
         robot,
         gamepad,
@@ -69,4 +92,7 @@ def generate_launch_description():
         rosbridge_websocket,
         image_tools,
         web_video_server,
+        battery_publisher,
+        cpu_temperature_node,
+        storage_capacity_node,
     ])

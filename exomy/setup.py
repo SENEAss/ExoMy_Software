@@ -27,6 +27,9 @@ setup(
             'motor_node = exomy.motor_node:main',
             'gamepad_parser_node = exomy.gamepad_parser_node:main',
             'robot_node = exomy.robot_node:main',
+            'battery_publisher = exomy.battery_publisher:main',
+            'cpu_temperature_node = exomy.cpu_temperature_node:main',
+            'storage_capacity_node = exomy.storage_capacity_node:main',
         ],
     },
 )
