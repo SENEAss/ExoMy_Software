@@ -20,6 +20,10 @@ RUN sudo apt-get update && \
     sudo apt install ros-humble-rosbridge-server -y && \
     sudo apt-get install ros-humble-image-tools -y
 
+# Install vcgencmd and other rasberry pi tools
+RUN sudo apt-get update && \
+    sudo apt-get install libraspberrypi-bin -y
+
 # Install adafruit libs
 RUN sudo apt-get install python3-dev python3-rpi.gpio
 RUN pip3 install adafruit-circuitpython-pca9685
