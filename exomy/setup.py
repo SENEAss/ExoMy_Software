@@ -17,8 +17,6 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Maximilian Ehrhardt',
-    maintainer_email='max.ehrhardt@hotmail.de',
     description='Core functionalities for the ExoMy rover',
     license='GPLv3',
     tests_require=['pytest'],
@@ -30,6 +28,7 @@ setup(
             'battery_publisher = exomy.battery_publisher:main',
             'cpu_temperature_node = exomy.cpu_temperature_node:main',
             'storage_capacity_node = exomy.storage_capacity_node:main',
+            'object_detection_node = exomy.object_detection_node:main',
         ],
     },
 )
