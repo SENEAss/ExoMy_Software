@@ -28,7 +28,6 @@ setup(
             'battery_publisher = exomy.battery_publisher:main',
             'cpu_temperature_node = exomy.cpu_temperature_node:main',
             'storage_capacity_node = exomy.storage_capacity_node:main',
-            'object_detection_node = exomy.object_detection_node:main',
         ],
     },
 )
