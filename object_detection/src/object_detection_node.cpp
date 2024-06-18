@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iostream>
+#include <sys/stat.h>
 
 class ObjectDetection : public rclcpp::Node {
 public:
@@ -17,11 +19,23 @@ public:
 
     // Load YOLOv3 model
     std::string home = std::getenv("HOME");
-    std::string config_path = home + "/exomy_ws/src/exomy/config/yolov3.cfg";
-    std::string weights_path = home + "/exomy_ws/src/exomy/config/yolov3.weights";
+    std::string config_path = home + "/exomy_ws/src/object_detection/config/yolov3.cfg";
+    std::string weights_path = home + "/exomy_ws/src/object_detection/config/yolov3.weights";
+    std::string names_path = home + "/exomy_ws/src/object_detection/config/coco.names";
+
+    // Debug prints to verify paths
+    std::cout << "Config path: " << config_path << std::endl;
+    std::cout << "Weights path: " << weights_path << std::endl;
+    std::cout << "Names path: " << names_path << std::endl;
+
+    if (!file_exists(config_path) || !file_exists(weights_path) || !file_exists(names_path)) {
+      RCLCPP_ERROR(this->get_logger(), "One or more files not found");
+      return;
+    }
+
     net_ = cv::dnn::readNet(weights_path, config_path);
 
-    std::ifstream ifs(home + "/exomy_ws/src/exomy/config/coco.names");
+    std::ifstream ifs(names_path);
     std::string line;
     while (getline(ifs, line)) {
       classes_.push_back(line);
@@ -85,10 +99,15 @@ private:
     static std::vector<std::string> layer_names = net.getLayerNames();
     std::vector<int> out_layers = net.getUnconnectedOutLayers();
     std::vector<std::string> out_layers_names;
-    for (int i = 0; i < out_layers.size(); ++i) {
+    for (size_t i = 0; i < out_layers.size(); ++i) {
       out_layers_names.push_back(layer_names[out_layers[i] - 1]);
     }
     return out_layers_names;
+  }
+
+  bool file_exists(const std::string& name) {
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
   }
 
   rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscription_;
