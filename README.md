@@ -41,3 +41,6 @@ The main changes in this repository are:
 - Update of motors configuration scripts to use the new library version.
 - Update the launch scripts to use the new rosbridge server and video streaming server.
 - Added a force stop function to the exomy package to stop the motors in case of emergency.
+
+
+-Ceci est une migration pour passer de SENEAss à JazzNeusta
